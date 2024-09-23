@@ -47,8 +47,6 @@ namespace Anime_store.Services
         // <inheritdoc />
         public async Task<T?> Get(int id)
         {
-            ArgumentNullException.ThrowIfNull(id);
-
             T? entity = await _context.Set<T>().FindAsync(id);
             return entity ?? throw new NoDataFoundException();
         }
@@ -56,7 +54,8 @@ namespace Anime_store.Services
         // <inheritdoc />
         public async Task<bool> Update(T entity)
         {
-            T? existingEntity = await _context.Set<T>().FindAsync(entity) ?? throw new NullReferenceException();
+            T? existingEntity = await _context.Set<T>().FindAsync(entity) 
+                ?? throw new NoDataFoundException();
             _context.Entry(existingEntity).CurrentValues.SetValues(entity);
             int result = await _context.SaveChangesAsync();
 
@@ -71,7 +70,8 @@ namespace Anime_store.Services
         // <inheritdoc />
         public async Task<bool> Delete(int id)
         {
-            T? entity = await _context.Set<T>().FindAsync(id) ?? throw new NullReferenceException();
+            T? entity = await _context.Set<T>().FindAsync(id) 
+                ?? throw new NoDataFoundException();
             _context.Set<T>().Remove(entity);
             int result = await _context.SaveChangesAsync();
 
